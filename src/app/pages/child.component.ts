@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { SettingsService } from '../services/settings.service';
+
+declare function init();
 
 @Component({
   selector: 'app-child',
@@ -8,9 +11,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChildComponent implements OnInit {
 
-  constructor() { }
+  
+
+  constructor( private settingsservice: SettingsService) { }
 
   ngOnInit(): void {
+    init();
   }
 
 }
