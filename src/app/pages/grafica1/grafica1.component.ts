@@ -10,8 +10,8 @@ import { Component } from '@angular/core';
 })
 export class Grafica1Component {
   
-  public label1 = ['Fierro', 'Pariente', 'Obrador'];
-  public sizes = [
+  public label1: string[] = ['Fierro', 'Pariente', 'Obrador'];
+  public sizes: any[] = [
      [200, 350, 200]
   ];
   
