@@ -1,14 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { map, tap, catchError, delay } from 'rxjs/operators'
 import { Observable, of } from 'rxjs';
-
 import { environment } from '../../environments/environment';
-import { map, tap, catchError } from 'rxjs/operators'
+
+//Interfaces
 import { LoginForm } from '../interfaces/login-form.interface';
 import { RegisterForm } from '../interfaces/registerForm';
+import { MostarUsuarios } from '../interfaces/mostrarUsuariosForm.interface';
+
+//Modelo
 import { Usuario } from '../models/usuario.model';
+
 
 
 declare const gapi: any;
@@ -55,19 +59,26 @@ export class UsuarioService {
   get token(){
     return localStorage.getItem('token') || '';
   }
+
+  get headers(){
+        return {
+          headers: {
+            'utoken': this.token //Header de postman
+          }
+        }
+  }
+  
   get uid(){
     return this.usuario.Uid || '';
   }
+
+
   //Da acceso a usuario que este autenticado 
   validarToken(): Observable<boolean>{
     
 
     //Peticion get para renovar token
-    return this.http.get(`${url}/auth/refresh`,{
-      headers: {
-        'utoken': this.token //Header de postman
-      }
-    }).pipe(
+    return this.http.get(`${url}/auth/refresh`,this.headers).pipe(
       map((resp:any)=>{
 
         const {Uid, email, google,img = '', nombre,rol } = resp.usuario;
@@ -97,11 +108,7 @@ export class UsuarioService {
       rol: this.usuario.rol,
     }
 
-    return this.http.put(`${url}/usuario/${this.uid}`, data,{
-      headers: {
-        'utoken': this.token //Header de postman
-      }
-    });
+    return this.http.put(`${url}/usuario/${this.uid}`, data,this.headers);
   }
 
   loginUsuario(usuario: LoginForm){
@@ -112,6 +119,7 @@ export class UsuarioService {
                       })
                     );  
   }
+
   loginGoogle(token){
     return this.http.post(`${url}/auth/google`, {token})
                     .pipe(
@@ -121,4 +129,31 @@ export class UsuarioService {
                     );  
   }
 
+  mostrarUsuario(desde:number=0){
+    return this.http.get<MostarUsuarios>(`${url}/usuario?desde=${desde}`,this.headers)
+        .pipe(
+          delay(500),
+          map(resp=>{
+            const usuarios = resp.usuarios.map(
+              user=>new Usuario(user.nombre,user.email,'', user.rol,user.google,user.img,user.Uid)
+            );
+
+            return {
+              total: resp.total,
+              usuarios
+            };
+          })
+        );
+  }
+
+  eliminarUsuario(usuario: Usuario){
+    
+    return this.http.delete(`${url}/usuario/${usuario.Uid}`,this.headers);
+  }
+  
+
+  cambiarRol(usuario: Usuario){
+
+    return this.http.put(`${url}/usuario/${usuario.Uid}`, usuario,this.headers);
+  }
 }

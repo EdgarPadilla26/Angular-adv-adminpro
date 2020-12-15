@@ -16,14 +16,16 @@ export class Usuario{
 
     get ImagenUrl(){
         /*/subirarchivo/usuarios/noimagen*/
-        if(this.google){
+
+        if(!this.img){
+            return `${base_url}/subirarchivo/usuarios/noimagen`;
+        }else if(this.img.includes('https')){
             return this.img;
         }
-
-        if(this.img){
+        else if(this.img){
             return `${base_url}/subirarchivo/usuarios/${this.img}`;
         }
-        return `${base_url}/subirarchivo/usuarios/noimagen`;
+        
     };
 };
 

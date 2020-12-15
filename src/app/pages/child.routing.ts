@@ -13,6 +13,12 @@ import { ProfileComponent } from './profile/profile.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { AuthGuard } from '../guards/auth.guard';
 
+//Mantenimiento
+import { UsuariosComponent } from './mtto/usuarios/usuarios.component';
+import { HospitalesComponent } from './mtto/hospitales/hospitales.component';
+import { MedicosComponent } from './mtto/medicos/medicos.component';
+import { MedicoComponent } from './mtto/medicos/medico.component';
+
 
 const routes: Routes = [
     {
@@ -27,6 +33,12 @@ const routes: Routes = [
           {path: 'rxjs', component: RxjsComponent, data: {title: 'RxJs'}},
           {path: 'profile', component: ProfileComponent, data: {title: 'Profile'}},
           {path: 'accountSettings', component: AccountSettingsComponent, data: {title: 'Tema de la pagina'}},
+
+          //Mantenimiento
+          {path: 'usuarios', component: UsuariosComponent, data: {title: 'Usuarios'}},
+          {path: 'medicos', component: MedicosComponent, data: {title: 'Medicos'}},
+          {path: 'medicos/:id', component: MedicoComponent, data: {title: 'Medico'}},
+          {path: 'hospitales', component: HospitalesComponent, data: {title: 'Hospitales'}},
         ]
     },
 ];
